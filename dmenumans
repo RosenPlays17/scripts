@@ -1,0 +1,8 @@
+#!/bin/sh
+
+man=$(man -k . | dmenu -y 56 -x 12 -z 800 -l 37 | awk '{print $1}') &&
+view=$(printf "Terminal\nPDF" | dmenu -y 56 -x 12 -z 116 -l 2) &&
+case $view in
+	'PDF') man -Tpdf $man | zathura - ;;
+	'Terminal') alacritty -e man $man ;;
+esac

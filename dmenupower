@@ -1,0 +1,11 @@
+#!/bin/sh
+
+choice=$(printf '    Lock\nKill DWM\n  Reboot\nShutdown\n  Cancel\n' | dmenu -y 56 -x 2420 -z 128 -l 5)
+
+case $choice in
+	'    Lock') exec slock ;;
+	'Kill DWM') killall dwm ;;
+	'  Reboot') systemctl reboot ;;
+	'Shutdown') systemctl poweroff ;;
+	'  Cancel') exit ;;
+esac

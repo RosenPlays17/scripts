@@ -1,0 +1,48 @@
+#!/bin/sh
+
+while true; do
+
+# audio
+
+volume=$(pulsemixer --get-volume | awk '{print $1}')
+muted=$(pulsemixer --get-mute)
+[ $muted -eq 1 ] && volume="󰖁 muted" || volume="󰕾 $volume%"
+
+# network
+
+#prev=$(cat ~/.cache/netlog)
+#rx=$(cat /sys/class/net/enp34s0/statistics/rx_bytes)
+#tx=$(cat /sys/class/net/enp34s0/statistics/tx_bytes)
+#net=$(printf "↓%sK ↑%sK" \ "$(((rx-${prev%% *})/1024))" \ "$(((tx-${prev##* })/1024))")
+#echo "$rx $tx" > "/home/finn/.cache/netlog"
+
+# disk
+
+dtotal=$(df -h / | awk 'NR==2 {print $2}')
+dused=$(df -h / | awk 'NR==2 {print $3}')
+dpercent=$(df -h / | awk 'NR==2 {print $5}')
+disk=" $dused/$dtotal ($dpercent)"
+
+# ram
+
+rtotal=$(free -m | awk '/^Mem:/ {printf "%3.1fG", $2/1000}')
+rused=$(free -m | awk '/^Mem:/ {print $3}')
+rpercent=$(free -m | awk '/^Mem:/ {printf "%3.1f%%", $3/$2*100}')
+[ $rused -gt 1000 ] && rused=$(echo $rused | awk '{printf "%3.1fG", $1/1000}') || rused=$(echo $rused | awk '{printf "%3.0fM", $1}')
+ram=" $rused/$rtotal ($rpercent)"
+
+# cpu
+
+cpu=$(top -bn 1 | awk '/^%Cpu/ {printf "󰻠 %3.1f%%", $2+$4}')
+temp=$(sensors k10temp-pci-00c3 | awk '/^Tccd1/ {print $2}' | cut -c2-)
+
+# date
+
+date=$(date +' %-I:%M, %-d.%-m.%Y')
+
+# set status
+
+xsetroot -name "^c#81fbb7^$volume  ^c#7cdee9^^c#6e83ff^$disk  ^c#b848f5^$ram  ^c#ff6c6f^$cpu ($temp)  ^c#ffb376^$date   "
+sleep 1
+
+done

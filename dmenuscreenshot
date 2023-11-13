@@ -1,0 +1,20 @@
+#!/bin/sh
+
+funct=$(printf 'Screenshot Area\nScreenshot Window\nScreenshot Monitor 1\nScreenshot Monitor 2\n' | dmenu -y 56 -x 1154 -z 252 -l 4) &&
+case $1 in
+	'-c')
+		case $funct in
+			'Screenshot Area') sleep 0.02 && import png:- | xclip -sel clip -t image/png ;;
+			'Screenshot Window') sleep 0.02 && import png:- | xclip -sel clip -t image/png ;;
+			'Screenshot Monitor 1') sleep 0.02 && import png:- | xclip -sel clip -t image/png ;;
+			'Screenshot Monitor 2') sleep 0.02 && import png:- | xclip -sel clip -t image/png ;;
+		esac;;
+	'-s')
+		name=$(printf '' | dmenu -p 'File Name:' -y 56 -x 1030 -z 500) &&
+		case $funct in
+			'Screenshot Area') sleep 0.02 && import ~/screenshots/$name ;;
+			'Screenshot Window') sleep 0.02 && import -screen ~/screenshots/$name ;;
+			'Screenshot Monitor 1') sleep 0.02 && import -window root -crop 2560x1440+1350+480 ~/screenshots/$name ;;
+			'Screenshot Monitor 2') sleep 0.02 && import -window root -crop 1250x2400+0+0 ~/screenshots/$name ;;
+		esac;;
+esac
