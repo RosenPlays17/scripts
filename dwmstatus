@@ -32,6 +32,15 @@ ram=" $rused/$rtotal ($rpercent)"
 cpu=$(top -bn 1 | awk '/^%Cpu/ {printf "󰻠 %3.1f%%", $2+$4}')
 temp=$(sensors k10temp-pci-00c3 | awk '/^Tccd1/ {print $2}' | cut -c2-)
 
+# battery
+
+charg=$(acpi | cut -d " " -f 3)
+case $charg in
+	'Charging,') bat=$(echo "󰢞$(acpi | cut -d ',' -f 2) [$(acpi | cut -d ' ' -f 5)]") ;;
+	'Discharging,') bat=$(echo "󰂀$(acpi | cut -d ',' -f 2) [$(acpi | cut -d ' ' -f 5)]") ;;
+	'Full,') bat=$(echo "󰁹$(acpi | cut -d ',' -f 2)") ;;
+esac
+
 # date
 
 date=$(date +' %-I:%M, %-d.%-m.%Y')
