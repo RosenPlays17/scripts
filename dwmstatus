@@ -4,17 +4,13 @@ while true; do
 
 # audio
 
-volume=$(pulsemixer --get-volume | awk '{print $1}')
+# alsa
+#vol=$(amixer sget Master | grep Mono | tr -d '[]' | awk 'NR==2 {printf "󰕾 %s [%s]", $4, $6}')
+
+# pulse
+vol=$(pulsemixer --get-volume | awk '{print $1}')
 muted=$(pulsemixer --get-mute)
-[ $muted -eq 1 ] && volume="󰖁 muted" || volume="󰕾 $volume%"
-
-# network
-
-#prev=$(cat ~/.cache/netlog)
-#rx=$(cat /sys/class/net/enp34s0/statistics/rx_bytes)
-#tx=$(cat /sys/class/net/enp34s0/statistics/tx_bytes)
-#net=$(printf "↓%sK ↑%sK" \ "$(((rx-${prev%% *})/1024))" \ "$(((tx-${prev##* })/1024))")
-#echo "$rx $tx" > "/home/finn/.cache/netlog"
+[ $muted -eq 1 ] && vol="󰖁 muted" || vol="󰕾 $volume%"
 
 # disk
 
@@ -42,7 +38,7 @@ date=$(date +' %-I:%M, %-d.%-m.%Y')
 
 # set status
 
-xsetroot -name "^c#81fbb7^$volume  ^c#7cdee9^^c#6e83ff^$disk  ^c#b848f5^$ram  ^c#ff6c6f^$cpu ($temp)  ^c#ffb376^$date   "
+xsetroot -name "^c#81fbb7^$vol  ^c#6e83ff^$disk  ^c#b848f5^$ram  ^c#ff6c6f^$cpu ($temp)  ^c#ffb376^$date   "
 sleep 1
 
 done
